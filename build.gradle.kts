@@ -9,11 +9,20 @@ group = "com.rsredsq.revolut"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("io.javalin:javalin:3.0.0.RC0")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+
+    implementation("cc.vileda:kotlin-openapi3-dsl:0.20.1")
+    implementation("io.github.classgraph:classgraph:4.8.36")
+    implementation("org.webjars:swagger-ui:3.17.6")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
+    implementation("io.swagger.core.v3:swagger-models:2.0.8")
+
 }
 
 configure<JavaPluginConvention> {

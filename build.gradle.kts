@@ -23,7 +23,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
     implementation("io.swagger.core.v3:swagger-models:2.0.8")
     implementation("org.jetbrains.exposed:exposed:0.13.7")
-
+    implementation("org.kodein.di:kodein-di-generic-jvm:6.2.0")
 
 }
 

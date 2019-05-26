@@ -7,4 +7,5 @@ interface AccountRepository {
   fun findAll(): List<Account>
   fun findById(id: Int): Account?
   fun delete(id: Int)
+  fun deleteAll()
 }

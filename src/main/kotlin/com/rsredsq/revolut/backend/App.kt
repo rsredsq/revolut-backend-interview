@@ -10,6 +10,7 @@ import io.javalin.apibuilder.ApiBuilder.path
 import io.javalin.core.JavalinConfig
 import io.javalin.plugin.openapi.OpenApiOptions
 import io.javalin.plugin.openapi.OpenApiPlugin
+import io.javalin.plugin.openapi.annotations.ContentType
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.swagger.v3.oas.models.info.Info
 import org.eclipse.jetty.http.HttpStatus
@@ -26,13 +27,18 @@ val kodein = Kodein {
 
 val db = Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1", "org.h2.Driver")
 
-fun main() =
+fun main() {
+  startJavalin()
+}
+
+fun startJavalin(): Javalin =
   Javalin
     .create { config -> initialConfig(config) }
     .start(8080)
-    .let { app -> configure(app) }
+    .also { app -> configure(app) }
 
 fun initialConfig(config: JavalinConfig) = config.apply {
+  defaultContentType = ContentType.JSON
   enableWebjars()
   enableDevLogging()
   registerPlugin(

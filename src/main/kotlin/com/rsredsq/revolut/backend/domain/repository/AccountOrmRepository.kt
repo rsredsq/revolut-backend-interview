@@ -1,6 +1,5 @@
 package com.rsredsq.revolut.backend.domain.repository
 
-import com.rsredsq.revolut.backend.db
 import com.rsredsq.revolut.backend.domain.Account
 import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.IntEntity
@@ -8,6 +7,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.IntIdTable
 import org.jetbrains.exposed.exceptions.EntityNotFoundException
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 typealias IntEntityID = EntityID<Int>
@@ -26,18 +26,21 @@ class AccountOrmEntity(id: IntEntityID) : IntEntity(id) {
 
 class AccountOrmRepository : AccountRepository {
   init {
-    transaction(db) {
+    transaction {
       SchemaUtils.create(Accounts)
     }
   }
 
-  override fun findAll(): List<Account> =
+  override fun findAll(): List<Account> = transaction {
     AccountOrmEntity.all().map { it.toDomain() }.toList()
+  }
 
-  override fun findById(id: Int): Account? = AccountOrmEntity.findById(id)?.toDomain()
+  override fun findById(id: Int): Account? = transaction {
+    AccountOrmEntity.findById(id)?.toDomain()
+  }
 
-  override fun delete(id: Int){
-    transaction(db) {
+  override fun delete(id: Int) {
+    transaction {
       AccountOrmEntity.findById(id)?.delete() ?: throw EntityNotFoundException(
         IntEntityID(
           id,
@@ -45,11 +48,17 @@ class AccountOrmRepository : AccountRepository {
         ), AccountOrmEntity.Companion
       )
     }
-
   }
 
-  override fun create(balance: Double): Account =
+  override fun deleteAll() {
+    transaction {
+      Accounts.deleteAll()
+    }
+  }
+
+  override fun create(balance: Double): Account = transaction {
     AccountOrmEntity.new {
       this.balance = balance
     }.toDomain()
+  }
 }

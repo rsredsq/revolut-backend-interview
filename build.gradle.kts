@@ -25,6 +25,12 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed:0.13.7")
     implementation("org.kodein.di:kodein-di-generic-jvm:6.2.0")
 
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+    testImplementation("org.assertj:assertj-core:3.11.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    testImplementation("com.konghq:unirest-java:2.3.02")
+    testImplementation("com.konghq:unirest-objectmapper-jackson:2.3.02")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 }
 
 configure<JavaPluginConvention> {

@@ -18,12 +18,10 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.kodein.di.generic.instance
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
 import kotlin.random.Random
 
 
-const val BASE_URL = "http://localhost:8080/api/accounts"
+const val ACCOUNTS_BASE_URL = "http://localhost:8080/api/accounts"
 
 class AccountsSystemTest {
   private val accountRepository by kodein.instance<AccountRepository>()
@@ -52,7 +50,7 @@ class AccountsSystemTest {
 
   @Test
   fun `simple account creation`() {
-    val accountResponse = Unirest.post(BASE_URL)
+    val accountResponse = Unirest.post(ACCOUNTS_BASE_URL)
       .body(AccountCreateRequest())
       .asObject(AccountDto::class.java)
 
@@ -60,7 +58,7 @@ class AccountsSystemTest {
 
     val createdAccount = accountResponse.body
 
-    val fetchedAccount = Unirest.get("$BASE_URL/{id}")
+    val fetchedAccount = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
       .routeParam("id", createdAccount.id.toString())
       .asObject(AccountDto::class.java)
 
@@ -71,7 +69,7 @@ class AccountsSystemTest {
   fun `account creation with initial balance`() {
     val givenInitialBalance = 1488.228
 
-    val accountResponse = Unirest.post(BASE_URL)
+    val accountResponse = Unirest.post(ACCOUNTS_BASE_URL)
       .body(AccountCreateRequest(givenInitialBalance))
       .asObject<AccountDto>()
 
@@ -80,7 +78,7 @@ class AccountsSystemTest {
     assertThat(accountResponse.status).isEqualTo(HttpStatus.CREATED_201)
     assertThat(createdAccount.balance).isEqualTo(givenInitialBalance)
 
-    val fetchedAccount = Unirest.get("$BASE_URL/{id}")
+    val fetchedAccount = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
       .routeParam("id", createdAccount.id.toString())
       .asObject(AccountDto::class.java)
 
@@ -95,7 +93,7 @@ class AccountsSystemTest {
 
     repeat(200) {
       val balance = Random.nextDouble()
-      val future = Unirest.post(BASE_URL)
+      val future = Unirest.post(ACCOUNTS_BASE_URL)
         .body(AccountCreateRequest(balance))
         .asObjectAsync(AccountDto::class.java)
       futureAndGivenBalance.add(future to balance)
@@ -111,7 +109,7 @@ class AccountsSystemTest {
 
   @Test
   fun `account update is not allowed`() {
-    val response = Unirest.patch("$BASE_URL/{id}")
+    val response = Unirest.patch("$ACCOUNTS_BASE_URL/{id}")
       .routeParam("id", "228")
       .asString()
 
@@ -123,7 +121,7 @@ class AccountsSystemTest {
     val givenAccounts =
       listOf(accountRepository.create(228.0), accountRepository.create(1488.0)).map { it.dto() }
 
-    val response = Unirest.get(BASE_URL)
+    val response = Unirest.get(ACCOUNTS_BASE_URL)
       .asObject(object : GenericType<List<AccountDto>>() {})
 
     assertThat(response.body).isEqualTo(givenAccounts)

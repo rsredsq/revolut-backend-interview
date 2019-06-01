@@ -1,5 +1,9 @@
 package com.rsredsq.revolut.backend
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rsredsq.revolut.backend.api.AccountController
 import com.rsredsq.revolut.backend.api.TransferController
 import com.rsredsq.revolut.backend.domain.repository.AccountOrmRepository
@@ -11,6 +15,7 @@ import com.rsredsq.revolut.backend.domain.service.TransferService
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 import io.javalin.core.JavalinConfig
+import io.javalin.plugin.json.JavalinJackson
 import io.javalin.plugin.openapi.OpenApiOptions
 import io.javalin.plugin.openapi.OpenApiPlugin
 import io.javalin.plugin.openapi.annotations.ContentType
@@ -32,6 +37,13 @@ val kodein = Kodein {
 
 val db = Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1", "org.h2.Driver")
 
+val globalObjectMapper = jacksonObjectMapper().apply {
+  registerModule(JodaModule())
+  enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+  disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
+  disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS)
+}
+
 fun main() {
   startJavalin()
 }
@@ -44,12 +56,13 @@ fun startJavalin(): Javalin =
 
 fun initialConfig(config: JavalinConfig) = config.apply {
   defaultContentType = ContentType.JSON
+  JavalinJackson.configure(globalObjectMapper)
   enableWebjars()
   enableDevLogging()
   registerPlugin(
     OpenApiOptions(Info())
       .path("/openapi")
-      .swagger(SwaggerOptions("/swagger").title("test"))
+      .swagger(SwaggerOptions("/swagger").title("Revolut backend task"))
       .let { options ->
         OpenApiPlugin(options)
       }
@@ -68,6 +81,7 @@ fun router(app: Javalin) {
   app.routes {
     path("api") {
       crud("accounts/:id", AccountController)
+      get("accounts/:id/transfers", TransferController::listTransfers)
       path("transfers") {
         post(TransferController::create)
       }

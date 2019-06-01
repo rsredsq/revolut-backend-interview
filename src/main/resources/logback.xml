@@ -12,13 +12,13 @@
     <appender name="ASYNC_STDOUT" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>500</queueSize>
         <discardingThreshold>0</discardingThreshold>
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.rsredsq" level="DEBUG" />
+    <logger name="com.rsredsq" level="DEBUG"/>
 
 </configuration>

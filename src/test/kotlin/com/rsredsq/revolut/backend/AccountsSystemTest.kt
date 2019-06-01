@@ -1,6 +1,5 @@
 package com.rsredsq.revolut.backend
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rsredsq.revolut.backend.api.AccountCreateRequest
 import com.rsredsq.revolut.backend.api.AccountDto
 import com.rsredsq.revolut.backend.api.dto
@@ -36,7 +35,7 @@ class AccountsSystemTest {
     fun beforeAll() {
       app = startJavalin()
       Unirest.config().apply {
-        objectMapper = JacksonObjectMapper(jacksonObjectMapper())
+        objectMapper = JacksonObjectMapper(globalObjectMapper)
         concurrency(200, 200)
       }
     }
@@ -141,6 +140,24 @@ class AccountsSystemTest {
       .asObject(object : GenericType<List<AccountDto>>() {})
 
     assertThat(response.body).isEqualTo(givenAccounts)
+  }
+
+  @Test
+  fun `incorrect account id returns bad request`() {
+    val response = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
+      .routeParam("id", "NOT_INT")
+      .asString()
+
+    assertThat(response.status).isEqualTo(HttpStatus.BAD_REQUEST_400)
+  }
+
+  @Test
+  fun `request for not created account id returns not found`() {
+    val response = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
+      .routeParam("id", "228")
+      .asString()
+
+    assertThat(response.status).isEqualTo(HttpStatus.NOT_FOUND_404)
   }
 
 }

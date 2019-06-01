@@ -1,3 +1,5 @@
 package com.rsredsq.revolut.backend.domain
 
-data class Account(val id: Int, val balance: Long)
+import com.rsredsq.revolut.backend.domain.repository.AccountId
+
+data class Account(val id: AccountId, val balance: Long)

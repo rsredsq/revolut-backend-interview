@@ -7,6 +7,6 @@ import org.kodein.di.generic.instance
 class TransferService {
   private val transferRepository by kodein.instance<TransferRepository>()
 
-  fun performTransfer(fromId: Int, toId: Int, amount: Double): Int =
+  fun performTransfer(fromId: Int, toId: Int, amount: Long): Int =
     transferRepository.performTransfer(fromId, toId, amount)
 }

@@ -13,11 +13,11 @@ import mu.KLogging
 import org.eclipse.jetty.http.HttpStatus
 import org.kodein.di.generic.instance
 
-data class AccountDto(val id: Int, val balance: Double)
+data class AccountDto(val id: Int, val balance: Long)
 
 fun Account.dto() = AccountDto(id, balance)
 
-data class AccountCreateRequest(val initialBalance: Double = 0.0)
+data class AccountCreateRequest(val initialBalance: Long = 0)
 
 object AccountController : KLogging(), CrudHandler {
 

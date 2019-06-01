@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 typealias IntEntityID = EntityID<Int>
 
 object Accounts : IntIdTable() {
-  val balance = double("balance")
+  val balance = long("balance")
 }
 
 class AccountOrmEntity(id: IntEntityID) : IntEntity(id) {
@@ -56,7 +56,7 @@ class AccountOrmRepository : AccountRepository {
     }
   }
 
-  override fun create(balance: Double): Account = transaction {
+  override fun create(balance: Long): Account = transaction {
     AccountOrmEntity.new {
       this.balance = balance
     }.toDomain()

@@ -6,7 +6,7 @@ import io.javalin.http.Context
 import org.eclipse.jetty.http.HttpStatus
 import org.kodein.di.generic.instance
 
-data class TransferRequest(val from: Int, val to: Int, val amount: Double)
+data class TransferRequest(val from: Int, val to: Int, val amount: Long)
 data class TransferResultDto(val id: Int)
 
 object TransferController {
@@ -17,7 +17,6 @@ object TransferController {
 
     val transferId = transferService.performTransfer(from, to, amount)
 
-    ctx.json(TransferResultDto(transferId))
-    ctx.status(HttpStatus.ACCEPTED_202)
+    ctx.status(HttpStatus.OK_200)
   }
 }

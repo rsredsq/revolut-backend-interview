@@ -9,7 +9,7 @@ class AccountService {
 
   private val accountRepository by kodein.instance<AccountRepository>()
 
-  fun create(initialBalance: Double = 0.0): Account =
+  fun create(initialBalance: Long = 0): Account =
     accountRepository.create(initialBalance)
 
   fun listAll(): List<Account> =

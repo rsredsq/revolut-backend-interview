@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object Transfers : IntIdTable() {
   val from = reference("from", Accounts)
   val to = reference("to", Accounts)
-  val amount = double("amount")
+  val amount = long("amount")
 }
 
 class TransferOrmEntity(id: IntEntityID) : IntEntity(id) {
@@ -29,7 +29,7 @@ class TransferOrmRepository : TransferRepository {
   }
 
   @Synchronized
-  override fun performTransfer(fromId: Int, toId: Int, amount: Double) = transaction {
+  override fun performTransfer(fromId: Int, toId: Int, amount: Long) = transaction {
     val from = AccountOrmEntity[fromId]
     val to = AccountOrmEntity[toId]
 

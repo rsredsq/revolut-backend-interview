@@ -13,3 +13,6 @@ fun <T> List<CompletableFuture<T>>.join(){
 
 inline fun <reified T> HttpRequest<*>.asObject(): HttpResponse<T> =
   asObject(T::class.java)
+
+inline fun <reified T> HttpRequest<*>.asObjectAsync(): CompletableFuture<HttpResponse<T>> =
+  asObjectAsync(T::class.java)

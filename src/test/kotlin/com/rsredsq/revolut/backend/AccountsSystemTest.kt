@@ -67,7 +67,7 @@ class AccountsSystemTest {
   fun `simple account creation`() {
     val accountResponse = Unirest.post(ACCOUNTS_BASE_URL)
       .body(AccountCreateRequest())
-      .asObject(AccountDto::class.java)
+      .asObject<AccountDto>()
 
     assertThat(accountResponse.status).isEqualTo(HttpStatus.CREATED_201)
 
@@ -75,7 +75,7 @@ class AccountsSystemTest {
 
     val fetchedAccount = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
       .routeParam("id", createdAccount.id.toString())
-      .asObject(AccountDto::class.java)
+      .asObject<AccountDto>()
 
     assertThat(createdAccount).isEqualTo(fetchedAccount.body)
   }
@@ -95,7 +95,7 @@ class AccountsSystemTest {
 
     val fetchedAccount = Unirest.get("$ACCOUNTS_BASE_URL/{id}")
       .routeParam("id", createdAccount.id.toString())
-      .asObject(AccountDto::class.java)
+      .asObject<AccountDto>()
 
     assertThat(createdAccount).isEqualTo(fetchedAccount.body)
   }
@@ -110,7 +110,8 @@ class AccountsSystemTest {
       val balance = Random.nextLong()
       val future = Unirest.post(ACCOUNTS_BASE_URL)
         .body(AccountCreateRequest(balance))
-        .asObjectAsync(AccountDto::class.java)
+        .asObjectAsync<AccountDto>()
+
       futureAndGivenBalance.add(future to balance)
     }
 

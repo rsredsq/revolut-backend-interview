@@ -96,8 +96,8 @@ class TransferSystemTest {
 
     futures.join()
 
-    val acc1 = Unirest.get("$ACCOUNTS_BASE_URL/1").asObject(AccountDto::class.java).body
-    val acc2 = Unirest.get("$ACCOUNTS_BASE_URL/2").asObject(AccountDto::class.java).body
+    val acc1 = Unirest.get("$ACCOUNTS_BASE_URL/1").asObject<AccountDto>().body
+    val acc2 = Unirest.get("$ACCOUNTS_BASE_URL/2").asObject<AccountDto>().body
 
     assertThat(acc1.balance + acc2.balance).isEqualTo(10)
   }

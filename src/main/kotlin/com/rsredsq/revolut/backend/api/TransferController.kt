@@ -7,7 +7,6 @@ import org.eclipse.jetty.http.HttpStatus
 import org.kodein.di.generic.instance
 
 data class TransferRequest(val from: Int, val to: Int, val amount: Long)
-data class TransferResultDto(val id: Int)
 
 object TransferController {
   private val transferService by kodein.instance<TransferService>()
@@ -15,7 +14,7 @@ object TransferController {
   fun create(ctx: Context) {
     val (from, to, amount) = ctx.body<TransferRequest>()
 
-    val transferId = transferService.performTransfer(from, to, amount)
+    transferService.performTransfer(from, to, amount)
 
     ctx.status(HttpStatus.OK_200)
   }

@@ -50,12 +50,6 @@ class AccountOrmRepository : AccountRepository {
     }
   }
 
-  override fun deleteAll() {
-    transaction {
-      Accounts.deleteAll()
-    }
-  }
-
   override fun create(balance: Long): Account = transaction {
     AccountOrmEntity.new {
       this.balance = balance

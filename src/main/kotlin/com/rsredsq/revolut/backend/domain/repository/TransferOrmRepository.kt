@@ -44,10 +44,4 @@ class TransferOrmRepository : TransferRepository {
 
     transfer.id.value
   }
-
-  override fun deleteAll() {
-    transaction {
-      Transfers.deleteAll()
-    }
-  }
 }
